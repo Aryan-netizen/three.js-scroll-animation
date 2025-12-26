@@ -164,13 +164,13 @@ window.addEventListener('mousemove',(event)=>{
     
 })
 const raycaster = new THREE.Raycaster()
-const currentIntersect = null;
+let currentIntersect = null;
 
-window.addEventListener('click',()=>{
-    if(currentIntersect){
-        console.log("Mouse Clicked")
-    }
-})
+// window.addEventListener('click',()=>{
+//     if(currentIntersect){
+//         console.log("Mouse Clicked")
+//     }
+// })
 /**
  * Animate
  */
