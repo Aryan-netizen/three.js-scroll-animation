@@ -155,13 +155,22 @@ window.addEventListener('scroll',()=>{
 const cursor= {}
 cursor.x=0
 cursor.y=0
-
+const mouse = new THREE.Vector2();
 window.addEventListener('mousemove',(event)=>{
-    cursor.x=event.clientX / sizes.height -0.5
-    cursor.y=event.clientY / sizes.width -0.5
+    cursor.x=event.clientX / sizes.width -0.5
+    cursor.y=event.clientY / sizes.height -0.5
+    mouse.x=event.clientX / sizes.width*2 -1
+    mouse.y=-event.clientY / sizes.height*2 +1
+    
 })
+const raycaster = new THREE.Raycaster()
+const currentIntersect = null;
 
-
+window.addEventListener('click',()=>{
+    if(currentIntersect){
+        console.log("Mouse Clicked")
+    }
+})
 /**
  * Animate
  */
@@ -188,6 +197,40 @@ const tick = () =>
     cameraGroup.position.x += (parallX - cameraGroup.position.x) * 5 * deltaTime
     cameraGroup.position.y += (parallY - cameraGroup.position.y) * 5 * deltaTime
 
+    raycaster.setFromCamera(mouse,camera)
+    const intersects = raycaster.intersectObjects(sectionMeshes)
+
+    for(const object of sectionMeshes){
+        if(!intersects.find(intersect => intersect.object === object)){
+            object.material.color.set(parameters.materialColor)
+        }       
+    }
+    for(const intersect of intersects){
+        intersect.object.material.color.set('#0000ff')
+    }
+    if(intersects.length){
+        if(currentIntersect === null)
+        {
+            console.log('mouse enter')
+        }
+        currentIntersect = intersects[0]
+    }
+    else{
+        if(currentIntersect)
+        {
+            console.log('mouse leave')
+        }
+        currentIntersect = null
+    }
+
+
+
+
+        
+
+
+
+    
     // Render
     renderer.render(scene, camera)
 
